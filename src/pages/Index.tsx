@@ -1,29 +1,54 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
+import { useState } from 'react';
 
 export default function Index() {
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  
   const projects = [
     {
       id: 1,
       title: 'Современный жилой комплекс',
       category: 'Жилая архитектура',
       image: '/img/ffc9f983-1768-42d2-85b5-04fbb42b7266.jpg',
-      description: 'Инновационный подход к городскому жилью с акцентом на экологичность и комфорт.'
+      description: 'Инновационный подход к городскому жилью с акцентом на экологичность и комфорт.',
+      fullDescription: 'Этот жилой комплекс представляет собой яркий пример современной архитектуры, где функциональность гармонично сочетается с эстетикой. Проект включает в себя 150 квартир различной планировки, общественные пространства и зеленые зоны.',
+      area: '12,000 м²',
+      year: '2023',
+      location: 'Москва, Россия',
+      client: 'ГК «Современный город»',
+      features: ['Энергоэффективность класса A+', 'Подземный паркинг на 200 мест', 'Детские и спортивные площадки', 'Система «умный дом»', 'Панорамные окна', 'Экологичные материалы'],
+      challenges: 'Основной вызов заключался в создании комфортного жилого пространства в условиях плотной городской застройки при соблюдении всех экологических стандартов.'
     },
     {
       id: 2,
       title: 'Интерьер премиум-класса',
       category: 'Дизайн интерьера',
       image: '/img/76edd2c1-cad5-458d-b562-4cf28b5755a9.jpg',
-      description: 'Элегантное пространство с минималистичным подходом и натуральными материалами.'
+      description: 'Элегантное пространство с минималистичным подходом и натуральными материалами.',
+      fullDescription: 'Проект интерьера премиум-класса в стиле современного минимализма. Каждая деталь тщательно продумана для создания атмосферы роскоши и комфорта, где функциональность не уступает красоте.',
+      area: '320 м²',
+      year: '2023',
+      location: 'Санкт-Петербург, Россия',
+      client: 'Частный заказчик',
+      features: ['Натуральный камень и дерево', 'Встроенная мебель на заказ', 'Система климат-контроля', 'Скрытое освещение', 'Панорамные окна в пол', 'Винная комната'],
+      challenges: 'Создание единого стилистического решения для всех помещений при сохранении индивидуальности каждой зоны и интеграции современных технологий.'
     },
     {
       id: 3,
       title: 'Бизнес-центр',
       category: 'Коммерческая архитектура',
       image: '/img/48c10b4f-ebf3-41ca-9598-deeb3d5764fb.jpg',
-      description: 'Современное офисное здание с инновационными архитектурными решениями.'
+      description: 'Современное офисное здание с инновационными архитектурными решениями.',
+      fullDescription: 'Многофункциональный бизнес-центр класса A с уникальным фасадом и передовыми технологическими решениями. Здание стало новой архитектурной доминантой района и примером устойчивого развития.',
+      area: '45,000 м²',
+      year: '2024',
+      location: 'Екатеринбург, Россия',
+      client: 'Инвестиционная группа «Развитие»',
+      features: ['25 этажей офисных помещений', 'Конференц-залы и переговорные', 'Фитнес-центр и SPA', 'Ресторанная зона', 'Подземный паркинг на 500 мест', 'Вертикальное озеленение фасада'],
+      challenges: 'Проектирование высотного здания в сейсмически активном регионе с учетом всех требований безопасности и комфорта для пользователей.'
     }
   ];
 
@@ -177,7 +202,11 @@ export default function Index() {
                   <p className="text-muted-foreground mb-4">
                     {project.description}
                   </p>
-                  <Button variant="ghost" className="p-0 h-auto font-medium">
+                  <Button 
+                    variant="ghost" 
+                    className="p-0 h-auto font-medium"
+                    onClick={() => setSelectedProject(project.id)}
+                  >
                     Подробнее
                     <Icon name="ArrowRight" size={16} className="ml-2" />
                   </Button>
@@ -278,6 +307,114 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      {/* Project Modal */}
+      <Dialog open={selectedProject !== null} onOpenChange={() => setSelectedProject(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedProject && (
+            <div className="space-y-6">
+              <DialogHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <DialogTitle className="text-2xl font-montserrat font-bold text-foreground">
+                      {projects.find(p => p.id === selectedProject)?.title}
+                    </DialogTitle>
+                    <p className="text-accent font-medium mt-2">
+                      {projects.find(p => p.id === selectedProject)?.category}
+                    </p>
+                  </div>
+                </div>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Project Image */}
+                <div className="relative h-64 md:h-80 rounded-lg overflow-hidden">
+                  <img 
+                    src={projects.find(p => p.id === selectedProject)?.image} 
+                    alt={projects.find(p => p.id === selectedProject)?.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Project Info Grid */}
+                <div className="grid md:grid-cols-4 gap-4">
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Площадь</div>
+                    <div className="font-semibold text-foreground">
+                      {projects.find(p => p.id === selectedProject)?.area}
+                    </div>
+                  </div>
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Год</div>
+                    <div className="font-semibold text-foreground">
+                      {projects.find(p => p.id === selectedProject)?.year}
+                    </div>
+                  </div>
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Местоположение</div>
+                    <div className="font-semibold text-foreground">
+                      {projects.find(p => p.id === selectedProject)?.location}
+                    </div>
+                  </div>
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Заказчик</div>
+                    <div className="font-semibold text-foreground">
+                      {projects.find(p => p.id === selectedProject)?.client}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Full Description */}
+                <div>
+                  <h4 className="text-lg font-montserrat font-semibold text-foreground mb-3">
+                    О проекте
+                  </h4>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {projects.find(p => p.id === selectedProject)?.fullDescription}
+                  </p>
+                </div>
+
+                {/* Features */}
+                <div>
+                  <h4 className="text-lg font-montserrat font-semibold text-foreground mb-4">
+                    Особенности проекта
+                  </h4>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    {projects.find(p => p.id === selectedProject)?.features.map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <Icon name="Check" size={16} className="text-accent flex-shrink-0" />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Challenges */}
+                <div>
+                  <h4 className="text-lg font-montserrat font-semibold text-foreground mb-3">
+                    Архитектурные решения
+                  </h4>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {projects.find(p => p.id === selectedProject)?.challenges}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+                  <Button className="flex-1">
+                    <Icon name="Download" size={16} className="mr-2" />
+                    Скачать презентацию
+                  </Button>
+                  <Button variant="outline" className="flex-1">
+                    <Icon name="Share" size={16} className="mr-2" />
+                    Поделиться проектом
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
